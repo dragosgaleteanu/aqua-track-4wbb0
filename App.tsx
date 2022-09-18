@@ -1,63 +1,69 @@
 import React from "react";
-import {
-  ImageBackground,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-} from "react-native";
-import DeviceList from "./components/DeviceList/DeviceList";
-import DishesWashed from "./components/DishesWashed/DishesWashed";
-import FinancialSavings from "./components/FinancialSavings/FinancialSavings";
-import RankindDashboard from "./components/RankingDashboard/RankingDashboard";
-import WaterConsumption from "./components/WaterConsumption/WaterConsumption";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Leaderboard from "./Leaderboard";
+import Home from "./Home";
+import Info from "./Info";
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require("./resources/images/background.jpg")}
-        style={styles.image}
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+          tabBarStyle: {
+            height: 80,
+            paddingTop: 5,
+            backgroundColor: "#0066ff",
+            borderTopColor: "#ffffff",
+            borderTopWidth: 2,
+          },
+          tabBarActiveTintColor: "#ffffff",
+          headerTitleStyle: {
+            color: "#ffffff",
+            fontSize: 25,
+          },
+        }}
       >
-        <ScrollView style={styles.innerView}>
-          <Text style={styles.title}>AquaTrack</Text>
-          <View style={styles.infoGrids}>
-            <DishesWashed />
-            <DeviceList />
-            <WaterConsumption />
-            <RankindDashboard />
-            <FinancialSavings />
-          </View>
-        </ScrollView>
-      </ImageBackground>
-    </View>
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="home" color={color} size={40} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Leaderboard"
+          component={Leaderboard}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="human-capacity-increase"
+                color={color}
+                size={40}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Info"
+          component={Info}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons
+                name="information-variant"
+                color={color}
+                size={40}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  infoGrids: {
-    flex: 1,
-    paddingTop: "-5%",
-    paddingLeft: "15%",
-  },
-  innerView: {
-    flex: 1,
-    flexDirection: "column",
-    paddingTop: "20%",
-    paddingLeft: "22%",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-  },
-  title: {
-    color: "#ffffff",
-    fontSize: 50,
-  },
-});
