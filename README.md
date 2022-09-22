@@ -1,3 +1,3 @@
-# Engineering Design (4WBB0) project
+# Engineering Design (4WBB0) project in React Native
 
-React Native is used
+Mobile app that can track water consumption, speed, temperature from a tap connected to the Arduino-powered system that fetches POST requests to a web server.
