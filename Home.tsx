@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Pressable } from "react-native";
+import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
+import SelectDropdown from "react-native-select-dropdown";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Home() {
-  const [displayMode, setDisplayMode] = useState<"Consumption" | "List">(
-    "Consumption"
-  );
+  const [displayMode, setDisplayMode] = useState<
+    "Consumption" | "List" | "Register"
+  >("Consumption");
 
   const mockupWaterSources = [
     "Kitchen tap",
@@ -15,9 +16,19 @@ export default function Home() {
   ];
   const [currentSource, setCurrentSource] = useState<string>("");
 
+  const selectOptions = ["Sink", "Shower"];
+  const [selectedOption, setSelectedOption] = useState<
+    "Sink" | "Shower" | "N/A"
+  >();
+
   const lastWeeklyCost = 60;
   const currentWeeklyCost = 10;
   const currentWaterSpeed = 1.2;
+
+  const [IPAddress, onChangeIPAddress] = React.useState("");
+  const [sourceName, onChangeSourceName] = React.useState("");
+
+  const [stateTax, setStateTax] = React.useState("");
 
   return (
     <View style={styles.container}>
@@ -71,7 +82,7 @@ export default function Home() {
                 <Text style={styles.selectSrcBtnText}>Select water source</Text>
               </Pressable>
             </>
-          ) : (
+          ) : displayMode === "List" ? (
             <>
               <Text style={styles.srcTitle}>Select water source</Text>
               <View style={styles.srcList}>
@@ -88,7 +99,16 @@ export default function Home() {
                   </Pressable>
                 ))}
               </View>
-
+              <Pressable
+                onPress={() => {
+                  setDisplayMode("Register");
+                }}
+                style={styles.registerBtn}
+              >
+                <Text style={styles.goBackBtnText}>
+                  Register new water source
+                </Text>
+              </Pressable>
               <Pressable
                 onPress={() => {
                   setDisplayMode("Consumption");
@@ -96,6 +116,88 @@ export default function Home() {
                 style={styles.goBackBtn}
               >
                 <Text style={styles.goBackBtnText}>Go back</Text>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <Text style={styles.registerSrcTitle}>
+                Register a new water source
+              </Text>
+              <View style={styles.dropdown}>
+                <SelectDropdown
+                  buttonStyle={{
+                    borderRadius: 50,
+                    backgroundColor: "#e6e6e6",
+                    shadowColor: "#ffffff",
+                  }}
+                  dropdownStyle={{
+                    borderRadius: 5,
+                  }}
+                  data={selectOptions}
+                  onSelect={(selectedItem, index) => {
+                    setSelectedOption(selectedItem);
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    // text represented after item is selected
+                    // if data array is an array of objects then return selectedItem.property to render after item is selected
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    // text represented for each item in dropdown
+                    // if data array is an array of objects then return item.property to represent item in dropdown
+                    return item;
+                  }}
+                />
+              </View>
+              <TextInput
+                style={styles.ipInput}
+                onChangeText={onChangeIPAddress}
+                value={IPAddress}
+                placeholder="Enter IP Address"
+              />
+              <TextInput
+                style={styles.nameInput}
+                onChangeText={onChangeSourceName}
+                value={sourceName}
+                placeholder="Enter Source Name"
+              />
+              <Text style={styles.stateText}>{stateTax}</Text>
+              <Pressable
+                onPress={() => {
+                  setDisplayMode("List");
+                  setSelectedOption("N/A");
+                }}
+                style={styles.cancelBtn}
+              >
+                <Text style={styles.goBackBtnText}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  if (selectedOption !== "N/A") {
+                    setDisplayMode("List");
+
+                    //FIXME: save water resource details: type, IPAddress, sourceName
+                  } else {
+                    setStateTax(
+                      "Please fill in all fields to successfully add your water resource!"
+                    );
+
+                    setTimeout(() => {
+                      setStateTax("");
+                    }, 3000);
+                  }
+                }}
+                style={styles.confirmBtn}
+              >
+                <Text style={styles.goBackBtnText}>Confirm</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setDisplayMode("Consumption");
+                }}
+                style={styles.goHomeBtn}
+              >
+                <Text style={styles.goBackBtnText}>Go Home</Text>
               </Pressable>
             </>
           )}
@@ -115,12 +217,98 @@ const styles = StyleSheet.create({
     marginTop: 140,
     marginRight: 90,
   },
+  stateText: {
+    position: "absolute",
+    bottom: "22%",
+    left: "29%",
+    width: "70%",
+    height: "20%",
+    textAlign: "center",
+    color: "#ff3300",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  ipInput: {
+    position: "absolute",
+    top: "40%",
+    left: "24%",
+    width: "80%",
+    backgroundColor: "#e6e6e6",
+    padding: 20,
+    borderRadius: 50,
+  },
+  nameInput: {
+    position: "absolute",
+    top: "55%",
+    left: "24%",
+    width: "80%",
+    backgroundColor: "#e6e6e6",
+    padding: 20,
+    borderRadius: 50,
+  },
   srcTitle: {
     position: "absolute",
     top: "12%",
     left: "15%",
     fontSize: 35,
     color: "#ffffff",
+  },
+  registerSrcTitle: {
+    position: "absolute",
+    top: "12%",
+    left: "15%",
+    fontSize: 23,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+  dropdown: {
+    position: "absolute",
+    top: "25%",
+    left: "32%",
+  },
+  confirmBtn: {
+    backgroundColor: "#33cc33",
+    position: "absolute",
+    bottom: "16%",
+    right: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  cancelBtn: {
+    backgroundColor: "#ff0000",
+    position: "absolute",
+    bottom: "16%",
+    left: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  goHomeBtn: {
+    backgroundColor: "#0066ff",
+    position: "absolute",
+    bottom: "5%",
+    left: "39%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  registerBtn: {
+    backgroundColor: "#0066ff",
+    position: "absolute",
+    bottom: "15%",
+    left: "15%",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
   },
   srcBtn: {
     marginVertical: 20,
@@ -146,13 +334,13 @@ const styles = StyleSheet.create({
   },
   goBackBtn: {
     position: "absolute",
-    bottom: "10%",
+    bottom: "3%",
     left: "36%",
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#0066ff",
     borderRadius: 50,
-    paddingVertical: 30,
+    paddingVertical: 15,
     paddingHorizontal: 50,
   },
   goBackBtnText: {
