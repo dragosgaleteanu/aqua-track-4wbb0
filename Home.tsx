@@ -17,23 +17,31 @@ export default function Home() {
   const [currentSource, setCurrentSource] = useState<string>("");
 
   const selectOptions = ["Sink", "Shower"];
-  const [selectedOption, setSelectedOption] = useState<
-    "Sink" | "Shower" | "N/A"
-  >();
+  const [selectedOption, setSelectedOption] = useState<"Sink" | "Shower" | "">(
+    ""
+  );
 
   const lastWeeklyCost = 60;
   const currentWeeklyCost = 10;
   const currentWaterSpeed = 1.2;
 
-  const [IPAddress, onChangeIPAddress] = React.useState("");
-  const [sourceName, onChangeSourceName] = React.useState("");
+  const [IPAddress, setIPAddress] = React.useState("");
+  const [sourceName, setSourceName] = React.useState("");
 
-  const [stateTax, setStateTax] = React.useState("");
+  const [stateText, setStateText] = React.useState("");
 
   return (
     <View style={styles.container}>
       <LinearGradient colors={["#0066ff", "#66ccff"]} style={styles.container}>
         <View style={styles.innerView}>
+          <Pressable
+            style={styles.logoutBtn}
+            onPress={() => {
+              //FIXME: implement logout functionality
+            }}
+          >
+            <Text style={styles.logoutBtnText}>Log out</Text>
+          </Pressable>
           {displayMode === "Consumption" ? (
             <>
               <Text style={styles.title}>AquaTrack</Text>
@@ -151,21 +159,27 @@ export default function Home() {
               </View>
               <TextInput
                 style={styles.ipInput}
-                onChangeText={onChangeIPAddress}
+                onChangeText={(text) => {
+                  setIPAddress(text);
+                }}
                 value={IPAddress}
                 placeholder="Enter IP Address"
               />
               <TextInput
                 style={styles.nameInput}
-                onChangeText={onChangeSourceName}
+                onChangeText={(text) => {
+                  setSourceName(text);
+                }}
                 value={sourceName}
                 placeholder="Enter Source Name"
               />
-              <Text style={styles.stateText}>{stateTax}</Text>
+              <Text style={styles.stateText}>{stateText}</Text>
               <Pressable
                 onPress={() => {
+                  setSourceName("");
+                  setIPAddress("");
+                  setSelectedOption("");
                   setDisplayMode("List");
-                  setSelectedOption("N/A");
                 }}
                 style={styles.cancelBtn}
               >
@@ -173,17 +187,17 @@ export default function Home() {
               </Pressable>
               <Pressable
                 onPress={() => {
-                  if (selectedOption !== "N/A") {
+                  if (selectedOption !== "") {
                     setDisplayMode("List");
 
                     //FIXME: save water resource details: type, IPAddress, sourceName
                   } else {
-                    setStateTax(
+                    setStateText(
                       "Please fill in all fields to successfully add your water resource!"
                     );
 
                     setTimeout(() => {
-                      setStateTax("");
+                      setStateText("");
                     }, 3000);
                   }
                 }}
@@ -212,6 +226,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: "-5%",
     paddingLeft: "15%",
+  },
+  logoutBtn: {
+    position: "absolute",
+    top: "8%",
+    right: "8%",
+  },
+  logoutBtnText: {
+    fontSize: 13,
+    color: "#ffffff",
   },
   srcList: {
     marginTop: 140,
