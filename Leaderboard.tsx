@@ -80,12 +80,19 @@ export default function Leaderboard({ navigation }: { navigation: any }) {
             >
               <Text style={styles.newUserBtnText}>+</Text>
             </Pressable>
+            <View style={styles.listLegend}>
+              <Text style={styles.listLegendText}>Rank</Text>
+              <Text style={styles.legendNameConsumption}>Name</Text>
+              <Text style={styles.legendNameConsumption}>Consumption</Text>
+            </View>
             <ScrollView style={styles.scrollList}>
               {rankingList.map((user, index) => (
                 <View key={index} style={styles.scrollElement}>
-                  <Text style={styles.scrollName}>{user.name}</Text>
+                  <Text style={styles.scrollName}>
+                    #{index + 1} {user.name}
+                  </Text>
                   <Text style={styles.scrollWater}>
-                    {user.consumptionPerPerson}
+                    {user.consumptionPerPerson}m³
                   </Text>
                   <Pressable
                     style={styles.scrollElBtn}
@@ -110,6 +117,24 @@ export default function Leaderboard({ navigation }: { navigation: any }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  listLegend: {
+    position: "absolute",
+    display: "flex",
+    flexDirection: "row",
+    top: "35%",
+    left: "10%",
+  },
+  listLegendText: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  legendNameConsumption: {
+    color: "#ffffff",
+    fontSize: 20,
+    paddingLeft: 30,
+    fontWeight: "bold",
   },
   logoutBtn: {
     position: "absolute",
@@ -159,12 +184,12 @@ const styles = StyleSheet.create({
   scrollName: {
     paddingLeft: 5,
     fontSize: 32,
-    width: "43%",
+    width: "50%",
     color: "#ffffff",
     fontWeight: "bold",
   },
   scrollWater: {
-    width: "12%",
+    width: "15%",
     textAlign: "right",
     color: "#ffffff",
     fontSize: 20,
@@ -191,14 +216,14 @@ const styles = StyleSheet.create({
   scrollElBtnText: {
     color: "#ffffff",
     fontSize: 25,
-    paddingLeft: 5,
+    paddingLeft: 8,
   },
   scrollList: {
     position: "absolute",
-    top: "35%",
-    left: "10%",
-    width: "78%",
-    height: "60%",
+    top: "40%",
+    left: "3%",
+    width: "92%",
+    height: "53%",
     borderRadius: 20,
     padding: 10,
   },

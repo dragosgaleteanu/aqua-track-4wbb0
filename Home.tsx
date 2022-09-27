@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Pressable, TextInput } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import { LinearGradient } from "expo-linear-gradient";
+import { IconComponentProvider, Icon } from "@react-native-material/core";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function Home() {
   const [displayMode, setDisplayMode] = useState<
@@ -9,17 +11,28 @@ export default function Home() {
   >("Consumption");
 
   const mockupWaterSources = [
-    "Kitchen tap",
-    "Bathroom shower",
-    "Garden hose",
-    "Neighbor's sink",
+    "Kitchen sinks",
+    "Garden hoses",
+    "Bathroom shower heads",
+    "Bathroom sinks",
+  ];
+  const mockSourceTypes = [
+    "silverware-fork-knife",
+    "flower-pollen-outline",
+    "shower-head",
+    "water-pump",
   ];
   const [currentSource, setCurrentSource] = useState<string>("");
 
-  const selectOptions = ["Sink", "Shower"];
-  const [selectedOption, setSelectedOption] = useState<"Sink" | "Shower" | "">(
-    ""
-  );
+  const selectOptions = [
+    "Bathroom Sink",
+    "Kitchen Sink",
+    "Bathroom Shower",
+    "Garden Hose",
+  ];
+  const [selectedOption, setSelectedOption] = useState<
+    "Bathroom Sink" | "Kitchen Sink" | "Bathroom Shower" | "Garden Hose" | ""
+  >("");
 
   const lastWeeklyCost = 60;
   const currentWeeklyCost = 10;
@@ -47,19 +60,17 @@ export default function Home() {
               <Text style={styles.title}>AquaTrack</Text>
               <View style={styles.infoGrids}>
                 <View style={styles.volumeGrid}>
-                  <Text style={styles.volumeTitle}>
-                    This week you have consumed
-                  </Text>
-                  <Text style={styles.volumeValue}>7 cubic meters</Text>
+                  <Text style={styles.volumeTitle}>Total consumption</Text>
+                  <Text style={styles.volumeUnit}>/week</Text>
+                  <Text style={styles.volumeValue}>7m³</Text>
                 </View>
                 <View style={styles.heatGrid}>
-                  <Text style={styles.heatTitle}>
-                    Average water temperature
-                  </Text>
-                  <Text style={styles.heatValue}>30C/86F</Text>
+                  <Text style={styles.heatTitle}>Avg ° Temperature</Text>
+                  <Text style={styles.heatUnit}>/week</Text>
+                  <Text style={styles.heatValue}>30°C</Text>
                 </View>
                 <View style={styles.speedGrid}>
-                  <Text style={styles.speedTitle}>Current water speed</Text>
+                  <Text style={styles.speedTitle}>Current water flow</Text>
                   <Text style={styles.speedValue}>
                     {currentWaterSpeed} l/min
                   </Text>
@@ -91,7 +102,7 @@ export default function Home() {
               </Pressable>
             </>
           ) : displayMode === "List" ? (
-            <>
+            <IconComponentProvider IconComponent={MaterialCommunityIcons}>
               <Text style={styles.srcTitle}>Select water source</Text>
               <View style={styles.srcList}>
                 {mockupWaterSources.map((waterSource, index) => (
@@ -103,6 +114,11 @@ export default function Home() {
                       setDisplayMode("Consumption");
                     }}
                   >
+                    <Icon
+                      name={mockSourceTypes[index]}
+                      size={24}
+                      color="#ffffff"
+                    />
                     <Text style={styles.srcBtnText}>{waterSource}</Text>
                   </Pressable>
                 ))}
@@ -113,19 +129,17 @@ export default function Home() {
                 }}
                 style={styles.registerBtn}
               >
-                <Text style={styles.goBackBtnText}>
-                  Register new water source
-                </Text>
+                <Text style={styles.registerBtnText}>+</Text>
               </Pressable>
               <Pressable
                 onPress={() => {
                   setDisplayMode("Consumption");
                 }}
-                style={styles.goBackBtn}
+                style={styles.goBackBtnList}
               >
                 <Text style={styles.goBackBtnText}>Go back</Text>
               </Pressable>
-            </>
+            </IconComponentProvider>
           ) : (
             <>
               <Text style={styles.registerSrcTitle}>
@@ -137,6 +151,7 @@ export default function Home() {
                     borderRadius: 50,
                     backgroundColor: "#e6e6e6",
                     shadowColor: "#ffffff",
+                    width: 242,
                   }}
                   dropdownStyle={{
                     borderRadius: 5,
@@ -238,7 +253,12 @@ const styles = StyleSheet.create({
   },
   srcList: {
     marginTop: 140,
-    marginRight: 90,
+    marginLeft: -50,
+    marginRight: 45,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    height: "35%",
   },
   stateText: {
     position: "absolute",
@@ -287,12 +307,12 @@ const styles = StyleSheet.create({
   dropdown: {
     position: "absolute",
     top: "25%",
-    left: "32%",
+    left: "25%",
   },
   confirmBtn: {
     backgroundColor: "#33cc33",
     position: "absolute",
-    bottom: "16%",
+    bottom: "23%",
     right: "15%",
     alignItems: "center",
     justifyContent: "center",
@@ -303,7 +323,7 @@ const styles = StyleSheet.create({
   cancelBtn: {
     backgroundColor: "#ff0000",
     position: "absolute",
-    bottom: "16%",
+    bottom: "23%",
     left: "15%",
     alignItems: "center",
     justifyContent: "center",
@@ -314,7 +334,7 @@ const styles = StyleSheet.create({
   goHomeBtn: {
     backgroundColor: "#0066ff",
     position: "absolute",
-    bottom: "5%",
+    bottom: "8%",
     left: "39%",
     alignItems: "center",
     justifyContent: "center",
@@ -325,25 +345,40 @@ const styles = StyleSheet.create({
   registerBtn: {
     backgroundColor: "#0066ff",
     position: "absolute",
-    bottom: "15%",
-    left: "15%",
+    top: "70%",
+    left: "38%",
+    width: "47%",
+    height: 95,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 50,
-    paddingVertical: 15,
+    borderRadius: 20,
+    paddingBottom: 10,
     paddingHorizontal: 30,
   },
   srcBtn: {
     marginVertical: 20,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0066ff",
+    marginBottom: 7,
+    minHeight: 50,
+    borderRadius: 20,
+    padding: 10,
+    marginLeft: 10,
+    width: "45%",
+    height: "40%",
   },
   srcBtnText: {
-    fontSize: 25,
+    marginTop: 10,
+    fontSize: 16,
     color: "#ffffff",
     textAlign: "center",
   },
   selectSrcBtn: {
     position: "absolute",
-    bottom: "10%",
+    bottom: "5%",
     left: "28%",
     alignItems: "center",
     justifyContent: "center",
@@ -354,6 +389,17 @@ const styles = StyleSheet.create({
   selectSrcBtnText: {
     fontSize: 20,
     color: "#ffffff",
+  },
+  goBackBtnList: {
+    position: "absolute",
+    bottom: "8%",
+    left: "33%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0066ff",
+    borderRadius: 50,
+    paddingVertical: 15,
+    paddingHorizontal: 50,
   },
   goBackBtn: {
     position: "absolute",
@@ -366,31 +412,52 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 50,
   },
+  registerBtnText: {
+    position: "absolute",
+    bottom: "5%",
+    fontSize: 80,
+    color: "#ffffff",
+  },
   goBackBtnText: {
     fontSize: 20,
     color: "#ffffff",
   },
   heatGrid: {
     position: "absolute",
-    top: "25%",
-    left: "1%",
+    top: "10%",
+    left: "45%",
     alignItems: "center",
+    backgroundColor: "transparent",
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 2,
+    borderColor: "#0ABAB5",
   },
   heatTitle: { color: "#ffffff", fontSize: 18 },
+  heatUnit: { color: "#ffffff", fontSize: 18, marginBottom: 5 },
   heatValue: { color: "#ffffff", fontSize: 30, fontWeight: "bold" },
   speedGrid: {
     position: "absolute",
-    top: "40%",
-    left: "10%",
+    top: "30%",
+    left: "-7%",
     alignItems: "center",
+    borderColor: "#0ABAB5",
+    borderWidth: 2,
+    borderRadius: 10,
+    padding: 10,
+    width: "100%",
   },
   speedTitle: { color: "#ffffff", fontSize: 18 },
   speedValue: { color: "#ffffff", fontSize: 36, fontWeight: "bold" },
   volumeGrid: {
     position: "absolute",
     top: "10%",
-    left: "-5%",
+    left: "-25.5%",
     alignItems: "center",
+    borderColor: "#0ABAB5",
+    borderRadius: 10,
+    padding: 10,
+    borderWidth: 2,
   },
   volumeTitle: {
     color: "#ffffff",
@@ -401,16 +468,27 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: "bold",
   },
+  volumeUnit: {
+    fontSize: 18,
+    color: "#ffffff",
+    marginBottom: 5,
+  },
   financialGrid: {
-    width: "100%",
+    width: "70%",
     position: "absolute",
-    bottom: "30%",
-    right: "25%",
+    bottom: "28%",
+    right: "40%",
     alignItems: "center",
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#0ABAB5",
+    padding: 20,
+    paddingBottom: 15,
   },
   financialTitle: {
     color: "#ffffff",
     fontSize: 20,
+    textAlign: "center",
   },
   financialValueLower: {
     color: "#00ff00",
