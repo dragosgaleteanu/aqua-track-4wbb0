@@ -19,8 +19,8 @@ export default function Leaderboard({ navigation }: { navigation: any }) {
     { name: "Thijs", consumptionPerPerson: 27 },
     { name: "Thijs", consumptionPerPerson: 45 },
     { name: "Ima", consumptionPerPerson: 78 },
-    { name: "John", consumptionPerPerson: 98 },
-    { name: "Mary", consumptionPerPerson: 99 },
+    { name: "John", consumptionPerPerson: 84 },
+    { name: "Mary", consumptionPerPerson: 92 },
   ]);
 
   return (
@@ -74,7 +74,7 @@ export default function Leaderboard({ navigation }: { navigation: any }) {
                 setUserToAdd("");
                 setRankingList((prev) => [
                   ...prev,
-                  { name: userToAdd, consumptionPerPerson: 3 },
+                  { name: userToAdd, consumptionPerPerson: 99 },
                 ]);
               }}
             >

@@ -4,25 +4,29 @@ import SelectDropdown from "react-native-select-dropdown";
 import { LinearGradient } from "expo-linear-gradient";
 import { IconComponentProvider, Icon } from "@react-native-material/core";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import GardenHoses from "./GardenHoses";
+import BathroomShowerHeads from "./BathroomShowerHeads";
+import KitchenSinks from "./KitchenSinks";
+import BathroomSinks from "./BathroomSinks";
 
 export default function Home() {
   const [displayMode, setDisplayMode] = useState<
     "Consumption" | "List" | "Register"
   >("Consumption");
 
-  const mockupWaterSources = [
-    "Kitchen sinks",
-    "Garden hoses",
-    "Bathroom shower heads",
-    "Bathroom sinks",
-  ];
+  const mockupWaterSources: (
+    | "Bathroom Sink"
+    | "Kitchen Sink"
+    | "Bathroom Shower"
+    | "Garden Hose"
+    | ""
+  )[] = ["Kitchen Sink", "Garden Hose", "Bathroom Shower", "Bathroom Sink"];
   const mockSourceTypes = [
     "silverware-fork-knife",
     "flower-pollen-outline",
     "shower-head",
     "water-pump",
   ];
-  const [currentSource, setCurrentSource] = useState<string>("");
 
   const selectOptions = [
     "Bathroom Sink",
@@ -36,12 +40,17 @@ export default function Home() {
 
   const lastWeeklyCost = 60;
   const currentWeeklyCost = 10;
-  const currentWaterSpeed = 1.2;
+  const currentWaterSpeed = 14.2;
 
   const [IPAddress, setIPAddress] = React.useState("");
   const [sourceName, setSourceName] = React.useState("");
 
   const [stateText, setStateText] = React.useState("");
+
+  const returnHome = () => {
+    setSelectedOption("");
+    setDisplayMode("List");
+  };
 
   return (
     <View style={styles.container}>
@@ -55,14 +64,25 @@ export default function Home() {
           >
             <Text style={styles.logoutBtnText}>Log out</Text>
           </Pressable>
-          {displayMode === "Consumption" ? (
+          {selectedOption === "Garden Hose" ? (
+            <GardenHoses returnHome={returnHome} />
+          ) : selectedOption === "Bathroom Shower" ? (
+            <BathroomShowerHeads returnHome={returnHome} />
+          ) : selectedOption === "Kitchen Sink" ? (
+            <KitchenSinks returnHome={returnHome} />
+          ) : selectedOption === "Bathroom Sink" ? (
+            <BathroomSinks returnHome={returnHome} />
+          ) : (
+            <></>
+          )}
+          {displayMode === "Consumption" && selectedOption === "" ? (
             <>
               <Text style={styles.title}>AquaTrack</Text>
               <View style={styles.infoGrids}>
                 <View style={styles.volumeGrid}>
                   <Text style={styles.volumeTitle}>Total consumption</Text>
                   <Text style={styles.volumeUnit}>/week</Text>
-                  <Text style={styles.volumeValue}>7m³</Text>
+                  <Text style={styles.volumeValue}>16m³</Text>
                 </View>
                 <View style={styles.heatGrid}>
                   <Text style={styles.heatTitle}>Avg ° Temperature</Text>
@@ -110,7 +130,7 @@ export default function Home() {
                     key={index}
                     style={styles.srcBtn}
                     onPress={() => {
-                      setCurrentSource(waterSource);
+                      setSelectedOption(waterSource);
                       setDisplayMode("Consumption");
                     }}
                   >
@@ -140,7 +160,7 @@ export default function Home() {
                 <Text style={styles.goBackBtnText}>Go back</Text>
               </Pressable>
             </IconComponentProvider>
-          ) : (
+          ) : displayMode === "Register" ? (
             <>
               <Text style={styles.registerSrcTitle}>
                 Register a new water source
@@ -229,6 +249,8 @@ export default function Home() {
                 <Text style={styles.goBackBtnText}>Go Home</Text>
               </Pressable>
             </>
+          ) : (
+            <></>
           )}
         </View>
       </LinearGradient>
@@ -412,14 +434,14 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 50,
   },
+  goBackBtnText: {
+    fontSize: 20,
+    color: "#ffffff",
+  },
   registerBtnText: {
     position: "absolute",
     bottom: "5%",
     fontSize: 80,
-    color: "#ffffff",
-  },
-  goBackBtnText: {
-    fontSize: 20,
     color: "#ffffff",
   },
   heatGrid: {
